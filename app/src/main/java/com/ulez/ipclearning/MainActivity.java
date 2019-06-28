@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Book book : list) {
                     addBookView(book);
                 }
+                mRemoteBookManager.registerListener(mOnNewBookArrivedListener);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -122,6 +123,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mRemoteBookManager != null && mRemoteBookManager.asBinder().isBinderAlive()) {
+            try {
+                Log.i(TAG, "unregister listener:" + mOnNewBookArrivedListener);
+                mRemoteBookManager.unregisterListener(mOnNewBookArrivedListener);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
         unbindService(serviceConnection);
     }
 }

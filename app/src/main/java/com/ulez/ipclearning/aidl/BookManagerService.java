@@ -74,9 +74,22 @@ public class BookManagerService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 4; i < 100; i++) {
+                for (int j = 4; j < 100; j++) {
                     SystemClock.sleep(1000);
-                    mBookList.add(new Book(i, "android--" + i));
+                    Book book = new Book(j, "android--" + j);
+                    mBookList.add(book);
+                    final int N = mListenerList.beginBroadcast();
+                    for (int i = 0; i < N; i++) {
+                        IOnNewBookArrivedListener arrivedListener = mListenerList.getBroadcastItem(i);
+                        if (arrivedListener != null) {
+                            try {
+                                arrivedListener.onNewBookArrived(book);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    mListenerList.finishBroadcast();
                 }
             }
         }).start();

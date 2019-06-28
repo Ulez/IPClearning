@@ -3,7 +3,7 @@ package com.ulez.ipclearning;
 
 // Declare any non-default types here with import statements
 
-import com.ulez.ipclearning.Book;
+import com.ulez.ipclearning.Book;//尽管在相同的包下，还需要导入
 import com.ulez.ipclearning.IOnNewBookArrivedListener;
 
 interface IBookManager {

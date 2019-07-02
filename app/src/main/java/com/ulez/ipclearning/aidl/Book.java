@@ -1,4 +1,4 @@
-package com.ulez.ipclearning;
+package com.ulez.ipclearning.aidl;
 
 import android.os.Parcel;
 import android.os.Parcelable;

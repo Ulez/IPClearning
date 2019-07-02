@@ -1,8 +1,8 @@
 // IOnNewBookArrivedListener.aidl
-package com.ulez.ipclearning;
+package com.ulez.ipclearning.aidl;
 
 // Declare any non-default types here with import statements
-import com.ulez.ipclearning.Book;
+import com.ulez.ipclearning.aidl.Book;
 
 interface IOnNewBookArrivedListener {
     /**

@@ -16,7 +16,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ulez.ipclearning.aidl.Book;
 import com.ulez.ipclearning.aidl.BookManagerService;
+import com.ulez.ipclearning.aidl.IBookManager;
+import com.ulez.ipclearning.aidl.IOnNewBookArrivedListener;
 
 import java.util.List;
 

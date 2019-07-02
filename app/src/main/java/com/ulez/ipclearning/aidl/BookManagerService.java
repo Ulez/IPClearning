@@ -2,19 +2,12 @@ package com.ulez.ipclearning.aidl;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Parcel;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
-
-
-import com.ulez.ipclearning.Book;
-import com.ulez.ipclearning.IBookManager;
-import com.ulez.ipclearning.IOnNewBookArrivedListener;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

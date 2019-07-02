@@ -1,16 +1,14 @@
 package com.ulez.ipclearning;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Handler;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,7 +19,6 @@ import com.ulez.ipclearning.aidl.BookManagerService;
 import com.ulez.ipclearning.aidl.IBookManager;
 import com.ulez.ipclearning.aidl.IOnNewBookArrivedListener;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,28 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private IBookManager mRemoteBookManager;
     private MyHandler mHandler;
 
-    private static class MyHandler extends Handler {
-        private WeakReference<Context> reference;
+    private static class MyHandler extends WeakHandler<MainActivity> {
 
-        public MyHandler(Context context) {
-            reference = new WeakReference<>(context);
+        public MyHandler(MainActivity context) {
+            super(context);
         }
 
         @Override
-        public void handleMessage(Message msg) {
-            MainActivity activity = (MainActivity) reference.get();
-            switch (msg.what) {
-                case MESSAGE_NEW_BOOK_ARRIVED:
-                    Log.d(TAG, "receive new book :" + msg.obj);
-                    if (msg.obj instanceof Book) {
-                        if (activity != null) {
-                            activity.addBookView((Book) (msg.obj));
-                        }
-                    }
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
+        public void handle(MainActivity activity, Message msg) {
+            activity.addBookView((Book) (msg.obj));
         }
     }
 

@@ -21,6 +21,7 @@ import com.ulez.ipclearning.aidl.BookManagerService;
 import com.ulez.ipclearning.aidl.IBookManager;
 import com.ulez.ipclearning.aidl.IOnNewBookArrivedListener;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,26 +29,37 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int MESSAGE_NEW_BOOK_ARRIVED = 1;
     private IBookManager mRemoteBookManager;
-    private Activity activity;
-    private Handler mHandler = new Handler() {
+    private MyHandler mHandler;
+
+    private static class MyHandler extends Handler {
+        private WeakReference<Context> reference;
+
+        public MyHandler(Context context) {
+            reference = new WeakReference<>(context);
+        }
+
         @Override
         public void handleMessage(Message msg) {
+            MainActivity activity = (MainActivity) reference.get();
             switch (msg.what) {
                 case MESSAGE_NEW_BOOK_ARRIVED:
                     Log.d(TAG, "receive new book :" + msg.obj);
                     if (msg.obj instanceof Book) {
-                        addBookView((Book) (msg.obj));
+                        if (activity != null) {
+                            activity.addBookView((Book) (msg.obj));
+                        }
                     }
                     break;
                 default:
                     super.handleMessage(msg);
             }
         }
-    };
+    }
+
 
     private void addBookView(Book book) {
         Log.i(TAG, "book:" + book.toString());
-        TextView textView = new TextView(activity);
+        TextView textView = new TextView(this);
         textView.setText(book.toString());
         container.addView(textView);
     }
@@ -102,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
         Log.i(TAG, "setContentView");
-        activity = this;
+        mHandler = new MyHandler(this);
         Intent intent = new Intent(this, BookManagerService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         container = findViewById(R.id.container);

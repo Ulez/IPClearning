@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             mRemoteBookManager.asBinder().unlinkToDeath(mDeathRecipient, 0);
             mRemoteBookManager = null;
-            // TODO:这里重新绑定远程Service
+            // 这里重新绑定远程Service，运行在Binder线程池，不能访问UI；
+//            bindService(new Intent(MainActivity.this, BookManagerService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         }
     };
     private IOnNewBookArrivedListener mOnNewBookArrivedListener = new IOnNewBookArrivedListener.Stub() {
@@ -87,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.i(TAG, "onServiceDisconnected");
+            //运行在UI进程，可以在这里重连远程服务
             mRemoteBookManager = null;
+            bindService(new Intent(MainActivity.this, BookManagerService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         }
     };
     private LinearLayout container;

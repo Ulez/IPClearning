@@ -76,6 +76,9 @@ public class BookManagerService extends Service {
                         IOnNewBookArrivedListener arrivedListener = mListenerList.getBroadcastItem(i);
                         if (arrivedListener != null) {
                             try {
+//                                in 关键字：caller->callee = service->client
+//                                数据流向：service 到 client.
+//                                callee（client）把数据更新变动后，不会反馈到caller（service）
                                 arrivedListener.onNewBookArrived(book);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
